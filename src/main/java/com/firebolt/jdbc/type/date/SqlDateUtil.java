@@ -17,7 +17,6 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 @UtilityClass
-@CustomLog
 public class SqlDateUtil {
 
 	public static final long ONE_DAY_MILLIS = 86400000L;

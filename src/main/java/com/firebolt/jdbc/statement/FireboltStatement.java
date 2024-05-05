@@ -11,7 +11,6 @@ import com.firebolt.jdbc.exception.FireboltSQLFeatureNotSupportedException;
 import com.firebolt.jdbc.exception.FireboltUnsupportedOperationException;
 import com.firebolt.jdbc.service.FireboltStatementService;
 import com.firebolt.jdbc.util.CloseableUtil;
-import lombok.CustomLog;
 
 import java.io.InputStream;
 import java.sql.Connection;
@@ -27,13 +26,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.firebolt.jdbc.statement.rawstatement.StatementValidatorFactory.createValidator;
+import static java.lang.String.format;
 import static java.util.stream.Collectors.toCollection;
 
-@CustomLog
 public class FireboltStatement extends JdbcBase implements Statement {
 
+	private static final Logger log = Logger.getLogger(FireboltStatement.class.getName());
 	private final FireboltStatementService statementService;
 	private final FireboltProperties sessionProperties;
 	private final FireboltConnection connection;
@@ -54,7 +56,7 @@ public class FireboltStatement extends JdbcBase implements Statement {
 		this.statementService = statementService;
 		this.sessionProperties = sessionProperties;
 		this.connection = connection;
-		log.debug("Created Statement");
+		log.fine("Created Statement");
 	}
 
 	@Override
@@ -108,11 +110,10 @@ public class FireboltStatement extends JdbcBase implements Statement {
 			}
 			InputStream inputStream = null;
 			try {
-				log.info("Executing the statement with label {} : {}", statementInfoWrapper.getLabel(),
-						statementInfoWrapper.getSql());
+				log.log(Level.INFO, "Executing the statement with label {0} : {1}", new Object[] {statementInfoWrapper.getLabel(), statementInfoWrapper.getSql()});
 				if (statementInfoWrapper.getType() == StatementType.PARAM_SETTING) {
 					connection.addProperty(statementInfoWrapper.getParam());
-					log.debug("The property from the query {} was stored", runningStatementLabel);
+					log.log(Level.FINE, "The property from the query {0} was stored", runningStatementLabel);
 				} else {
 					Optional<ResultSet> currentRs = statementService.execute(statementInfoWrapper, sessionProperties, isStandardSql, this);
 					if (currentRs.isPresent()) {
@@ -121,12 +122,11 @@ public class FireboltStatement extends JdbcBase implements Statement {
 					} else {
 						currentUpdateCount = 0;
 					}
-					log.info("The query with the label {} was executed with success", runningStatementLabel);
+					log.log(Level.INFO, "The query with the label {0} was executed with success", runningStatementLabel);
 				}
 			} catch (Exception ex) {
 				CloseableUtil.close(inputStream);
-				log.error(String.format("An error happened while executing the statement with the id %s",
-						runningStatementLabel), ex);
+				log.log(Level.SEVERE, ex, () -> format("An error happened while executing the statement with the id %s", runningStatementLabel));
 				throw ex;
 			} finally {
 				runningStatementLabel = null;
@@ -139,7 +139,7 @@ public class FireboltStatement extends JdbcBase implements Statement {
 				}
 			}
 		} else {
-			log.warn("Aborted query with id {}", statementInfoWrapper.getLabel());
+			log.log(Level.FINE, "Aborted query with id {0}", statementInfoWrapper.getLabel());
 		}
 		return Optional.ofNullable(resultSet);
 	}
@@ -174,7 +174,7 @@ public class FireboltStatement extends JdbcBase implements Statement {
 	private void abortStatementRunningOnFirebolt(String statementLabel) throws SQLException {
 		try {
 			statementService.abortStatement(statementLabel, sessionProperties);
-			log.debug("Statement with label {} was aborted", statementLabel);
+			log.log(Level.FINE, "Statement with label {0} was aborted", statementLabel);
 		} catch (FireboltException e) {
 			throw e;
 		} catch (Exception e) {
@@ -256,7 +256,7 @@ public class FireboltStatement extends JdbcBase implements Statement {
 	@Override
 	public void setMaxRows(int max) throws SQLException {
 		if (max < 0) {
-			throw new FireboltException(String.format("Illegal maxRows value: %d", max));
+			throw new FireboltException(format("Illegal maxRows value: %d", max));
 		}
 		maxRows = max;
 	}
@@ -288,7 +288,7 @@ public class FireboltStatement extends JdbcBase implements Statement {
 			connection.removeClosedStatement(this);
 		}
 		cancel();
-		log.debug("Statement closed");
+		log.fine("Statement closed");
 	}
 
 	@Override
