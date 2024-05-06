@@ -165,6 +165,7 @@ public abstract class FireboltClient {
 		return response.body().string();
 	}
 
+	@SuppressWarnings("java:S2139") // TODO: Exceptions should be either logged or rethrown but not both
 	private String extractErrorMessage(Response response, boolean isCompress) throws FireboltException {
 		byte[] entityBytes;
 		try {

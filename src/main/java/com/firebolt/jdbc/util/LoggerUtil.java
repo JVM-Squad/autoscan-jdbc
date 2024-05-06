@@ -22,14 +22,14 @@ public class LoggerUtil {
 	private static final Logger log = Logger.getLogger(LoggerUtil.class.getName());
 
 	private Logger initRootLogger() {
-		Logger root = Logger.getLogger(FireboltDriver.class.getPackageName());
+		Logger parent = Logger.getLogger(FireboltDriver.class.getPackageName());
 		if (slf4jAvailable) {
-			synchronized (root) {
-				root.addHandler(new SLF4JBridgeHandler());
-				root.setLevel(Level.ALL);
+			synchronized (LoggerUtil.class) {
+				parent.addHandler(new SLF4JBridgeHandler());
+				parent.setLevel(Level.ALL);
 			}
 		}
-		return root;
+		return parent;
 	}
 
 	public static Logger getRootLogger() {

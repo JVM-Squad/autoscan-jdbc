@@ -100,6 +100,7 @@ public class FireboltStatement extends JdbcBase implements Statement {
 		return resultSet;
 	}
 
+	@SuppressWarnings("java:S2139") // TODO: Exceptions should be either logged or rethrown but not both
 	private Optional<ResultSet> execute(StatementInfoWrapper statementInfoWrapper, boolean verifyNotCancelled, boolean isStandardSql) throws SQLException {
 		createValidator(statementInfoWrapper.getInitialStatement(), connection).validate(statementInfoWrapper.getInitialStatement());
 		ResultSet resultSet = null;
@@ -166,7 +167,7 @@ public class FireboltStatement extends JdbcBase implements Statement {
 		}
 		String statementLabel = runningStatementLabel;
 		if (statementLabel != null) {
-			log.info("Cancelling statement with label " + statementLabel);
+			log.log(Level.INFO, "Cancelling statement with label {0}", statementLabel);
 			abortStatementRunningOnFirebolt(statementLabel);
 		}
 	}

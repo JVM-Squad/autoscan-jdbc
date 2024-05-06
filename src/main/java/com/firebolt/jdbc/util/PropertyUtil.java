@@ -2,7 +2,6 @@ package com.firebolt.jdbc.util;
 
 import com.firebolt.jdbc.connection.settings.FireboltProperties;
 import com.firebolt.jdbc.connection.settings.FireboltSessionProperty;
-import lombok.CustomLog;
 import lombok.experimental.UtilityClass;
 
 import java.sql.DriverPropertyInfo;

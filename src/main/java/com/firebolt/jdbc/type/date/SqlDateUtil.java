@@ -1,7 +1,6 @@
 package com.firebolt.jdbc.type.date;
 
 import com.firebolt.jdbc.CheckedBiFunction;
-import lombok.CustomLog;
 import lombok.experimental.UtilityClass;
 
 import java.sql.Date;

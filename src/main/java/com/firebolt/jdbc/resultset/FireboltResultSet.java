@@ -86,6 +86,7 @@ public class FireboltResultSet extends JdbcBase implements ResultSet {
 
 	private String lastReadValue = null;
 
+	@SuppressWarnings("java:S2139") // TODO: Exceptions should be either logged or rethrown but not both
 	public FireboltResultSet(InputStream is, String tableName, String dbName, int bufferSize, boolean isCompressed,
 							 FireboltStatement statement, boolean logResultSet) throws SQLException {
 		log.fine("Creating resultSet...");
@@ -110,8 +111,8 @@ public class FireboltResultSet extends JdbcBase implements ResultSet {
 			columns = next() ? getColumns(fields, currentLine) : new ArrayList<>();
 			resultSetMetaData = new FireboltResultSetMetaData(dbName, tableName, columns);
 		} catch (Exception e) {
-			log.log(Level.SEVERE, "Could not create ResultSet: " + e.getMessage(), e);
-			throw new FireboltException("Cannot read response from DB: error while creating ResultSet ", e);
+			log.log(Level.SEVERE, e, () -> "Could not create ResultSet: " + e.getMessage());
+			throw new FireboltException("Cannot read response from DB: error while creating ResultSet", e);
 		}
 		log.fine("ResultSet created");
 	}

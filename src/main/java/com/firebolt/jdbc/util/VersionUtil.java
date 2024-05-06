@@ -1,6 +1,5 @@
 package com.firebolt.jdbc.util;
 
-import lombok.CustomLog;
 import lombok.experimental.UtilityClass;
 
 import java.io.File;
@@ -8,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.jar.Attributes.Name;

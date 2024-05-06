@@ -1,11 +1,9 @@
 package com.firebolt.jdbc.service;
 
 import com.firebolt.jdbc.client.authentication.FireboltAuthenticationClient;
-import com.firebolt.jdbc.client.config.socket.SocketUtil;
 import com.firebolt.jdbc.connection.FireboltConnectionTokens;
 import com.firebolt.jdbc.connection.settings.FireboltProperties;
 import com.firebolt.jdbc.exception.FireboltException;
-import lombok.CustomLog;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import net.jodah.expiringmap.ExpiringMap;
@@ -33,6 +31,7 @@ public class FireboltAuthenticationService {
 	private static final String ERROR_MESSAGE_FROM_SERVER = "Failed to connect to Firebolt with the error from the server: %s, see logs for more info.";
 	private final FireboltAuthenticationClient fireboltAuthenticationClient;
 
+	@SuppressWarnings("java:S2139") // TODO: Exceptions should be either logged or rethrown but not both
 	public FireboltConnectionTokens getConnectionTokens(String host, FireboltProperties loginProperties) throws FireboltException {
 		try {
 			ConnectParams connectionParams = new ConnectParams(host, loginProperties.getPrincipal(), loginProperties.getSecret());

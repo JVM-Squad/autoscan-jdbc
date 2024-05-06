@@ -1,12 +1,11 @@
 package com.firebolt.jdbc.util;
 
+import lombok.experimental.UtilityClass;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import lombok.CustomLog;
-import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class CloseableUtil {
