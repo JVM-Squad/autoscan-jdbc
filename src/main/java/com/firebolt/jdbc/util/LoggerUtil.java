@@ -17,13 +17,13 @@ import java.util.stream.Collectors;
 @UtilityClass
 public class LoggerUtil {
 
-	private static final boolean slf4jAvailable = isSlf4jJAvailable();
+	private static final boolean SLF4J_AVAILABLE = isSlf4jJAvailable();
 	private static final Logger root = initRootLogger();
 	private static final Logger log = Logger.getLogger(LoggerUtil.class.getName());
 
 	private Logger initRootLogger() {
 		Logger parent = Logger.getLogger(FireboltDriver.class.getPackageName());
-		if (slf4jAvailable) {
+		if (SLF4J_AVAILABLE) {
 			synchronized (LoggerUtil.class) {
 				parent.addHandler(new SLF4JBridgeHandler());
 				parent.setLevel(Level.ALL);
